@@ -8,19 +8,20 @@ const firebaseConfig = {
     measurementId: "G-Q985QSMDDT"
 };
 
+// Initialize Firebase
 firebase.initializeApp(firebaseConfig);
 const auth = firebase.auth();
 const db = firebase.firestore();
+const storage = firebase.storage();
 
 let isLoginMode = true;
 let currentChatId = null;
 
-// --- 1. ระบบ Authentication ---
+// --- Authentication Logic ---
 function toggleAuthMode() {
     isLoginMode = !isLoginMode;
-    document.getElementById('authSubtitle').innerText = isLoginMode ? "เข้าสู่ระบบเพื่อเข้าสู่ตลาดนักศึกษา" : "สร้างบัญชีใหม่เพื่อเริ่มช้อป";
+    document.getElementById('authSubtitle').innerText = isLoginMode ? "เข้าสู่ระบบเพื่อเข้าสู่ตลาดนักศึกษา" : "สร้างบัญชีใหม่เพื่อเริ่มใช้งาน";
     document.getElementById('btnAuth').innerText = isLoginMode ? "เข้าสู่ระบบ" : "สมัครสมาชิก";
-    document.getElementById('btnToggle').innerText = isLoginMode ? "สมัครสมาชิก" : "เข้าสู่ระบบ";
 }
 
 async function handleAuth() {
@@ -40,18 +41,51 @@ auth.onAuthStateChanged(user => {
 
 function logout() { auth.signOut(); }
 
-// --- 2. Marketplace & Filtering ---
+// --- Image Preview Logic ---
+function previewImg(event) {
+    const file = event.target.files[0];
+    if (file) {
+        const reader = new FileReader();
+        reader.onload = () => {
+            const img = document.getElementById('imgPre');
+            img.src = reader.result;
+            img.style.display = 'block';
+            document.getElementById('uploadLabel').style.display = 'none';
+        };
+        reader.readAsDataURL(file);
+    }
+}
+
+// --- Marketplace Logic ---
 async function savePost() {
-    const post = {
-        title: document.getElementById('pTitle').value,
-        cat: document.getElementById('pCat').value,
-        price: Number(document.getElementById('pPrice').value),
-        desc: document.getElementById('pDesc').value,
-        owner: auth.currentUser.email,
-        time: firebase.firestore.FieldValue.serverTimestamp()
-    };
-    await db.collection("market_posts").add(post);
-    closeModal('postModal');
+    const file = document.getElementById('pImage').files[0];
+    const btn = document.getElementById('btnSave');
+    if (!file) return alert("กรุณาเลือกรูปภาพสินค้า");
+
+    btn.disabled = true;
+    btn.innerText = "กำลังอัปโหลด...";
+
+    try {
+        const fileRef = storage.ref(`products/${Date.now()}_${file.name}`);
+        const uploadTask = await fileRef.put(file);
+        const imgUrl = await uploadTask.ref.getDownloadURL();
+
+        await db.collection("market_posts").add({
+            title: document.getElementById('pTitle').value,
+            cat: document.getElementById('pCat').value,
+            price: Number(document.getElementById('pPrice').value),
+            desc: document.getElementById('pDesc').value,
+            img: imgUrl,
+            owner: auth.currentUser.email,
+            time: firebase.firestore.FieldValue.serverTimestamp()
+        });
+
+        closeModal('postModal');
+        alert("ลงประกาศสำเร็จ!");
+    } catch (e) { alert(e.message); } finally {
+        btn.disabled = false;
+        btn.innerText = "ยืนยันโพสต์";
+    }
 }
 
 function loadProducts(filter = 'ทั้งหมด') {
@@ -59,15 +93,16 @@ function loadProducts(filter = 'ทั้งหมด') {
         const grid = document.getElementById('productGrid');
         grid.innerHTML = '';
         snap.forEach(doc => {
-            const data = doc.data();
-            if (filter !== 'ทั้งหมด' && data.cat !== filter) return;
+            const p = doc.data();
+            if (filter !== 'ทั้งหมด' && p.cat !== filter) return;
             
             grid.innerHTML += `
                 <div class="card">
-                    <small style="color:#666">${data.cat}</small>
-                    <h3>${data.title}</h3>
-                    <p class="price-tag">฿${data.price.toLocaleString()}</p>
-                    <button class="btn-primary" onclick="openChat('${doc.id}', '${data.title}')">💬 สอบถามแชท</button>
+                    <img src="${p.img}" class="card-img">
+                    <small style="color:#666">${p.cat}</small>
+                    <h3 style="margin:5px 0;">${p.title}</h3>
+                    <p class="price-tag">฿${p.price.toLocaleString()}</p>
+                    <button class="btn-primary" onclick="openChat('${doc.id}', '${p.title}')">💬 ติดต่อผู้ขาย</button>
                 </div>
             `;
         });
@@ -80,7 +115,7 @@ function filterCat(cat) {
     loadProducts(cat);
 }
 
-// --- 3. ระบบแชท ---
+// --- Chat Logic ---
 function openChat(id, title) {
     currentChatId = id;
     document.getElementById('chatBox').style.display = 'flex';
@@ -91,7 +126,14 @@ function openChat(id, title) {
         box.innerHTML = '';
         snap.forEach(m => {
             const d = m.data();
-            box.innerHTML += `<div><b>${d.user.split('@')[0]}:</b> ${d.text}</div>`;
+            const isMe = d.user === auth.currentUser.email;
+            box.innerHTML += `
+                <div style="align-self: ${isMe ? 'flex-end' : 'flex-start'}; 
+                            background: ${isMe ? 'var(--primary)' : '#eee'}; 
+                            color: ${isMe ? 'white' : 'black'};
+                            padding: 8px 12px; border-radius: 12px; max-width: 80%; font-size: 0.9rem;">
+                    ${d.text}
+                </div>`;
         });
         box.scrollTop = box.scrollHeight;
     });
