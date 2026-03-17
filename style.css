@@ -1,120 +1,263 @@
-/* Import Font ภาษาไทยที่ดูสะอาดตา */
-@import url('https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;500;600&display=swap');
-
+/* style.css */
 :root {
-    --primary: #0f172a;       /* สีกรมท่าเข้ม ดูเป็นทางการ */
-    --accent: #2563eb;        /* สีฟ้าสดใส สำหรับปุ่ม Action */
-    --success: #10b981;       /* สีเขียวสำหรับราคาหรือปุ่มซื้อ */
-    --bg-light: #f8fafc;      /* พื้นหลังเทาอ่อนสะอาดตา */
-    --text-main: #1e293b;     /* สีตัวอักษรหลัก */
-    --glass: rgba(255, 255, 255, 0.8);
-    --shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+    --primary-color: #1a237e;    /* น้ำเงินเข้มทางการ */
+    --secondary-color: #fbc02d;  /* สีเหลืองทองจันทรเกษม */
+    --accent-color: #3949ab;     /* น้ำเงินสว่างสำหรับ Hover */
+    --bg-body: #f4f7f9;          /* พื้นหลังเทาอ่อนสะอาด */
+    --text-main: #2c3e50;
+    --text-light: #7f8c8d;
+    --white: #ffffff;
+    --shadow: 0 8px 30px rgba(0,0,0,0.08);
+    --border-radius: 12px;
 }
 
 * {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
-    font-family: 'Kanit', sans-serif;
 }
 
 body {
-    background-color: var(--bg-light);
+    font-family: 'Kanit', sans-serif;
+    background-color: var(--bg-body);
     color: var(--text-main);
     line-height: 1.6;
 }
 
-/* --- Navigation --- */
-nav {
-    background: var(--primary);
-    color: white;
-    padding: 1rem 5%;
+/* Navbar */
+.navbar {
+    background: var(--primary-color);
+    padding: 1rem 2rem;
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+}
+
+.nav-container {
+    max-width: 1200px;
+    margin: auto;
     display: flex;
     justify-content: space-between;
     align-items: center;
-    position: sticky;
-    top: 0;
-    z-index: 100;
-    box-shadow: var(--shadow);
 }
 
 .logo {
+    color: var(--white);
     font-size: 1.5rem;
     font-weight: 600;
-    letter-spacing: 1px;
 }
 
 .logo span {
-    color: var(--accent);
+    color: var(--secondary-color);
 }
 
-.nav-links button {
-    margin-left: 10px;
-    padding: 8px 18px;
-    border-radius: 6px;
+.btn-post-nav {
+    background: var(--secondary-color);
+    color: var(--primary-color);
     border: none;
+    padding: 10px 24px;
+    border-radius: 30px;
+    font-weight: 600;
     cursor: pointer;
-    font-weight: 500;
-    transition: 0.3s;
-}
-
-#login-nav-btn {
-    background: var(--accent);
-    color: white;
-}
-
-#login-nav-btn:hover {
-    background: #1d4ed8;
-    transform: translateY(-2px);
-}
-
-/* --- Hero & Category Section --- */
-header {
-    text-align: center;
-    padding: 4rem 1rem;
-    background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
-    color: white;
-}
-
-.category-grid {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
-    gap: 12px;
-    margin-top: 2rem;
-}
-
-.cat-card {
-    background: var(--glass);
-    backdrop-filter: blur(10px);
-    color: var(--primary);
-    padding: 12px 24px;
-    border-radius: 50px;
-    border: 1px solid rgba(255,255,255,0.2);
-    cursor: pointer;
-    font-weight: 500;
     transition: all 0.3s ease;
 }
 
-.cat-card:hover {
-    background: var(--accent);
-    color: white;
-    transform: scale(1.05);
+.btn-post-nav:hover {
+    background: var(--white);
+    transform: translateY(-2px);
 }
 
-/* --- Product Grid --- */
-main {
+/* Category Bar */
+.container {
     max-width: 1200px;
-    margin: 3rem auto;
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-    gap: 25px;
+    margin: 20px auto;
     padding: 0 20px;
 }
 
+.category-bar {
+    display: flex;
+    gap: 12px;
+    padding: 10px 0;
+    overflow-x: auto;
+    margin-bottom: 30px;
+    scrollbar-width: none; /* Hide scrollbar Firefox */
+}
+
+.category-bar::-webkit-scrollbar { display: none; } /* Hide scrollbar Chrome */
+
+.cat-btn {
+    background: var(--white);
+    border: 1px solid #e0e0e0;
+    padding: 8px 20px;
+    border-radius: 20px;
+    cursor: pointer;
+    white-space: nowrap;
+    color: var(--text-main);
+    transition: 0.3s;
+}
+
+.cat-btn.active, .cat-btn:hover {
+    background: var(--primary-color);
+    color: var(--white);
+    border-color: var(--primary-color);
+}
+
+/* Market Grid */
+.market-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 25px;
+}
+
+/* Product Card */
 .product-card {
-    background: white;
-    border-radius: 12px;
-    padding: 15px;
+    background: var(--white);
+    border-radius: var(--border-radius);
+    overflow: hidden;
     box-shadow: var(--shadow);
-    transition: 0.3s
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    border: 1px solid rgba(0,0,0,0.05);
+}
+
+.product-card:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 15px 45px rgba(0,0,0,0.12);
+}
+
+.product-info {
+    padding: 20px;
+}
+
+.category-badge {
+    background: #e8eaf6;
+    color: var(--primary-color);
+    font-size: 0.75rem;
+    padding: 4px 12px;
+    border-radius: 4px;
+    text-transform: uppercase;
+    font-weight: 600;
+}
+
+.product-info h3 {
+    margin: 12px 0 8px;
+    font-size: 1.2rem;
+}
+
+.price-tag {
+    color: var(--primary-color);
+    font-size: 1.5rem;
+    font-weight: 700;
+    margin-bottom: 15px;
+}
+
+.btn-contact {
+    width: 100%;
+    background: var(--white);
+    border: 2px solid var(--primary-color);
+    color: var(--primary-color);
+    padding: 10px;
+    border-radius: 8px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.btn-contact:hover {
+    background: var(--primary-color);
+    color: var(--white);
+}
+
+/* Modal Styling */
+.modal {
+    display: none;
+    position: fixed;
+    top: 0; left: 0; width: 100%; height: 100%;
+    background: rgba(0,0,0,0.5);
+    backdrop-filter: blur(5px);
+    justify-content: center;
+    align-items: center;
+    z-index: 2000;
+}
+
+.modal-content {
+    background: var(--white);
+    padding: 40px;
+    border-radius: 20px;
+    width: 90%;
+    max-width: 500px;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+}
+
+.modal-content h3 { margin-bottom: 20px; color: var(--primary-color); }
+
+input, select, textarea {
+    width: 100%;
+    padding: 12px 15px;
+    margin-bottom: 15px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    font-family: inherit;
+    font-size: 1rem;
+}
+
+.btn-confirm {
+    background: var(--primary-color);
+    color: var(--white);
+    border: none;
+    padding: 12px 25px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: 600;
+}
+
+/* Chat Floating Window */
+.chat-container {
+    position: fixed;
+    bottom: 30px;
+    right: 30px;
+    width: 350px;
+    height: 500px;
+    background: var(--white);
+    border-radius: 20px;
+    box-shadow: 0 10px 50px rgba(0,0,0,0.2);
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    border: 1px solid rgba(0,0,0,0.1);
+}
+
+.chat-header {
+    background: var(--primary-color);
+    color: var(--white);
+    padding: 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.msg-display {
+    flex: 1;
+    padding: 20px;
+    background: #fcfcfc;
+    overflow-y: auto;
+}
+
+.chat-input-area {
+    padding: 15px;
+    background: var(--white);
+    display: flex;
+    gap: 10px;
+    border-top: 1px solid #eee;
+}
+
+.chat-input-area input { margin-bottom: 0; border-radius: 25px; }
+
+#btnSend {
+    background: var(--primary-color);
+    color: var(--white);
+    border: none;
+    padding: 0 20px;
+    border-radius: 25px;
+    cursor: pointer;
+}
