@@ -1,4 +1,3 @@
-// --- 1. Firebase Configuration ---
 const firebaseConfig = {
     apiKey: "AIzaSyAmbzRxqYFti6IEksy2WunKCVa_v8Gg0F0",
     authDomain: "market-digital-3d10e.firebaseapp.com",
@@ -12,28 +11,25 @@ const firebaseConfig = {
 firebase.initializeApp(firebaseConfig);
 const auth = firebase.auth();
 const db = firebase.firestore();
-const storage = firebase.storage();
 
 let isLoginMode = true;
 let currentChatId = null;
 
-// --- 2. ระบบ Authentication ---
+// --- 1. ระบบ Authentication ---
 function toggleAuthMode() {
     isLoginMode = !isLoginMode;
-    document.getElementById('authSubtitle').innerText = isLoginMode ? "เข้าสู่ระบบเพื่อเข้าสู่ตลาดนักศึกษา" : "สร้างบัญชีใหม่เพื่อเริ่มใช้งาน";
-    document.getElementById('btnAuth').innerText = isLoginMode ? "ตกลง" : "สมัครสมาชิก";
+    document.getElementById('authSubtitle').innerText = isLoginMode ? "เข้าสู่ระบบเพื่อเข้าสู่ตลาดนักศึกษา" : "สร้างบัญชีใหม่เพื่อเริ่มช้อป";
+    document.getElementById('btnAuth').innerText = isLoginMode ? "เข้าสู่ระบบ" : "สมัครสมาชิก";
     document.getElementById('btnToggle').innerText = isLoginMode ? "สมัครสมาชิก" : "เข้าสู่ระบบ";
 }
 
 async function handleAuth() {
     const email = document.getElementById('email').value;
     const pass = document.getElementById('password').value;
-    if(!email || !pass) return alert("กรุณากรอกข้อมูลให้ครบ");
-    
     try {
         if (isLoginMode) await auth.signInWithEmailAndPassword(email, pass);
         else await auth.createUserWithEmailAndPassword(email, pass);
-    } catch (e) { alert("ข้อผิดพลาด: " + e.message); }
+    } catch (e) { alert(e.message); }
 }
 
 auth.onAuthStateChanged(user => {
@@ -44,71 +40,34 @@ auth.onAuthStateChanged(user => {
 
 function logout() { auth.signOut(); }
 
-// --- 3. ระบบจัดการรูปภาพและลงประกาศ ---
-function previewImg(event) {
-    const file = event.target.files[0];
-    if (file) {
-        const reader = new FileReader();
-        reader.onload = () => {
-            const img = document.getElementById('imgPre');
-            img.src = reader.result;
-            img.style.display = 'block';
-        };
-        reader.readAsDataURL(file);
-    }
-}
-
+// --- 2. Marketplace & Filtering ---
 async function savePost() {
-    const file = document.getElementById('pImage').files[0];
-    const title = document.getElementById('pTitle').value;
-    const cat = document.getElementById('pCat').value;
-    const price = document.getElementById('pPrice').value;
-    const desc = document.getElementById('pDesc').value;
-
-    if (!file || !title || !price) return alert("กรุณากรอกข้อมูลและเลือกรูปภาพ");
-
-    const btn = document.getElementById('btnSave');
-    btn.disabled = true;
-    btn.innerText = "กำลังอัปโหลด...";
-
-    try {
-        // อัปโหลดรูปลง Storage
-        const fileRef = storage.ref(`products/${Date.now()}_${file.name}`);
-        const uploadTask = await fileRef.put(file);
-        const imgUrl = await uploadTask.ref.getDownloadURL();
-
-        // บันทึกลง Firestore
-        await db.collection("market_posts").add({
-            title, cat, price: Number(price), desc, img: imgUrl,
-            owner: auth.currentUser.email,
-            createdAt: firebase.firestore.FieldValue.serverTimestamp()
-        });
-
-        closeModal('postModal');
-        alert("ลงประกาศสำเร็จ!");
-    } catch (e) { alert(e.message); } 
-    finally {
-        btn.disabled = false;
-        btn.innerText = "ยืนยันโพสต์";
-    }
+    const post = {
+        title: document.getElementById('pTitle').value,
+        cat: document.getElementById('pCat').value,
+        price: Number(document.getElementById('pPrice').value),
+        desc: document.getElementById('pDesc').value,
+        owner: auth.currentUser.email,
+        time: firebase.firestore.FieldValue.serverTimestamp()
+    };
+    await db.collection("market_posts").add(post);
+    closeModal('postModal');
 }
 
-// --- 4. ดึงข้อมูลสินค้าและกรองตามคณะ ---
 function loadProducts(filter = 'ทั้งหมด') {
-    db.collection("market_posts").orderBy("createdAt", "desc").onSnapshot(snap => {
+    db.collection("market_posts").orderBy("time", "desc").onSnapshot(snap => {
         const grid = document.getElementById('productGrid');
         grid.innerHTML = '';
         snap.forEach(doc => {
-            const p = doc.data();
-            if (filter !== 'ทั้งหมด' && p.cat !== filter) return;
+            const data = doc.data();
+            if (filter !== 'ทั้งหมด' && data.cat !== filter) return;
             
             grid.innerHTML += `
                 <div class="card">
-                    <img src="${p.img}" class="card-img">
-                    <small style="color:var(--primary); font-weight:bold;">${p.cat}</small>
-                    <h3 style="margin:5px 0;">${p.title}</h3>
-                    <p class="price-tag">฿${p.price.toLocaleString()}</p>
-                    <button class="btn-primary" onclick="openChat('${doc.id}', '${p.title}')">💬 ติดต่อผู้ขาย</button>
+                    <small style="color:#666">${data.cat}</small>
+                    <h3>${data.title}</h3>
+                    <p class="price-tag">฿${data.price.toLocaleString()}</p>
+                    <button class="btn-primary" onclick="openChat('${doc.id}', '${data.title}')">💬 สอบถามแชท</button>
                 </div>
             `;
         });
@@ -121,26 +80,18 @@ function filterCat(cat) {
     loadProducts(cat);
 }
 
-// --- 5. ระบบแชทภายในแอป ---
+// --- 3. ระบบแชท ---
 function openChat(id, title) {
     currentChatId = id;
     document.getElementById('chatBox').style.display = 'flex';
     document.getElementById('chatTitle').innerText = title;
-    
     db.collection("market_posts").doc(id).collection("messages").orderBy("time")
     .onSnapshot(snap => {
         const box = document.getElementById('chatMsgs');
         box.innerHTML = '';
         snap.forEach(m => {
             const d = m.data();
-            const isMe = d.user === auth.currentUser.email;
-            box.innerHTML += `
-                <div style="align-self: ${isMe ? 'flex-end' : 'flex-start'}; 
-                            background: ${isMe ? 'var(--primary)' : '#eee'}; 
-                            color: ${isMe ? 'white' : 'black'};
-                            padding: 8px 12px; border-radius: 12px; max-width: 80%;">
-                    ${d.text}
-                </div>`;
+            box.innerHTML += `<div><b>${d.user.split('@')[0]}:</b> ${d.text}</div>`;
         });
         box.scrollTop = box.scrollHeight;
     });
@@ -148,7 +99,7 @@ function openChat(id, title) {
 
 async function sendMsg() {
     const text = document.getElementById('msgInput').value;
-    if (!text || !currentChatId) return;
+    if (!text) return;
     await db.collection("market_posts").doc(currentChatId).collection("messages").add({
         text, user: auth.currentUser.email, time: firebase.firestore.FieldValue.serverTimestamp()
     });
