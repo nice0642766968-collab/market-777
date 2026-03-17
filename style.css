@@ -1,22 +1,58 @@
-/* รูปภาพใน Card สินค้า */
-.card-img {
-    width: 100%;
-    height: 180px;
-    object-fit: cover;
-    border-radius: 10px;
-    margin-bottom: 15px;
-    background: #eee;
+:root {
+    --primary: #1a2a6c;
+    --accent: #f1c40f;
+    --bg: #f0f2f5;
+    --white: #ffffff;
+    --shadow: 0 8px 30px rgba(0,0,0,0.1);
 }
 
-.upload-section {
-    border: 2px dashed #ddd;
-    padding: 15px;
-    border-radius: 10px;
-    text-align: center;
-    margin-bottom: 10px;
+* { box-sizing: border-box; font-family: 'Kanit', sans-serif; }
+body { margin: 0; background: var(--bg); color: #333; }
+
+/* --- Authentication Section --- */
+.auth-overlay {
+    position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+    background: linear-gradient(45deg, #1a2a6c, #b21f1f, #fdbb2d);
+    display: flex; align-items: center; justify-content: center; z-index: 1000;
 }
 
-#imgPre {
-    max-height: 200px;
-    object-fit: contain;
+.auth-card {
+    background: rgba(255, 255, 255, 0.9);
+    backdrop-filter: blur(10px);
+    padding: 40px; border-radius: 25px; width: 380px;
+    box-shadow: var(--shadow); text-align: center;
 }
+
+/* --- App Navigation --- */
+.navbar { background: var(--primary); color: white; padding: 15px 5%; position: sticky; top: 0; z-index: 100; box-shadow: var(--shadow); }
+.nav-content { max-width: 1200px; margin: auto; display: flex; justify-content: space-between; align-items: center; }
+.logo span { color: var(--accent); font-weight: bold; }
+
+/* --- Main Layout --- */
+.main-layout { max-width: 1200px; margin: 30px auto; display: flex; gap: 25px; padding: 0 20px; }
+.sidebar { width: 260px; background: white; padding: 20px; border-radius: 18px; height: fit-content; box-shadow: var(--shadow); }
+.sidebar h3 { font-size: 1.1rem; color: var(--primary); border-bottom: 2px solid var(--accent); padding-bottom: 10px; }
+.sidebar ul { list-style: none; padding: 0; }
+.sidebar li { padding: 12px; cursor: pointer; border-radius: 10px; margin-bottom: 8px; transition: 0.3s; }
+.sidebar li:hover, .sidebar li.active { background: var(--primary); color: white; transform: translateX(5px); }
+
+/* --- Product Cards --- */
+.grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 25px; flex: 1; }
+.card { background: white; border-radius: 20px; padding: 15px; box-shadow: var(--shadow); transition: 0.3s; position: relative; overflow: hidden; }
+.card:hover { transform: translateY(-10px); }
+.card-img { width: 100%; height: 200px; object-fit: cover; border-radius: 15px; margin-bottom: 15px; background: #eee; }
+.price-tag { font-size: 1.4rem; font-weight: bold; color: var(--primary); margin: 10px 0; }
+
+/* --- Form Elements & Buttons --- */
+input, select, textarea { width: 100%; padding: 12px; margin: 10px 0; border: 1px solid #ddd; border-radius: 12px; font-size: 1rem; }
+.btn-primary { background: var(--primary); color: white; border: none; padding: 12px; border-radius: 12px; cursor: pointer; width: 100%; font-weight: 500; transition: 0.3s; }
+.btn-primary:hover { opacity: 0.9; transform: scale(0.98); }
+.btn-post { background: var(--accent); border: none; padding: 10px 20px; border-radius: 10px; font-weight: bold; cursor: pointer; box-shadow: 0 4px 10px rgba(241, 196, 15, 0.3); }
+
+/* --- Modal & Chat --- */
+.modal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.7); display: none; align-items: center; justify-content: center; z-index: 2000; }
+.modal-content { background: white; padding: 30px; border-radius: 20px; width: 450px; max-height: 90vh; overflow-y: auto; }
+
+.chat-float { position: fixed; bottom: 20px; right: 20px; width: 320px; height: 450px; background: white; border-radius: 20px; box-shadow: 0 10px 40px rgba(0,0,0,0.2); display: flex; flex-direction: column; overflow: hidden; border: 1px solid #eee; }
+.chat-header { background: var(--primary); color: white; padding: 15px; display: flex; justify-content: space-between; align-items: center; }
+.chat-body { flex: 1; padding: 15px; overflow-y: auto; background: #f9f9f9; display: flex; flex-direction: column; gap: 10px; }
