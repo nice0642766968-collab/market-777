@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CRU Digital Market | ตลาดซื้อขายออนไลน์</title>
+    <title>CRU Digital Market | ตลาดซื้อขายจันทรเกษม</title>
     <link rel="stylesheet" href="style.css">
     <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;500;600&display=swap" rel="stylesheet">
 </head>
@@ -12,9 +12,9 @@
     <div id="authView" class="auth-overlay">
         <div class="auth-card">
             <div class="auth-header">
-                <div class="logo-box">🌙</div>
+                <div class="logo-symbol">🌙</div>
                 <h2>CRU <span>Market</span></h2>
-                <p id="authSubtitle">เข้าสู่ระบบเพื่อเข้าสู่ตลาดนักศึกษา</p>
+                <p id="authSubtitle">แพลตฟอร์มซื้อขายสำหรับนักศึกษา</p>
             </div>
             <div class="auth-body">
                 <input type="email" id="email" placeholder="อีเมลนักศึกษา (@chandra.ac.th)">
@@ -31,7 +31,7 @@
     <div id="appView" class="app-wrapper" style="display: none;">
         <nav class="navbar">
             <div class="nav-content">
-                <div class="logo">CRU <span>Digital Market</span></div>
+                <div class="brand">CRU <span>Digital Market</span></div>
                 <div class="nav-right">
                     <button class="btn-post" onclick="openModal('postModal')">+ ลงประกาศขาย</button>
                     <button class="btn-logout" onclick="logout()">ออกจากระบบ</button>
@@ -61,12 +61,16 @@
     <div id="postModal" class="modal">
         <div class="modal-content">
             <h3>📢 ลงประกาศขายสินค้า</h3>
-            <div class="upload-area">
-                <input type="file" id="pImage" accept="image/*" onchange="previewImg(event)">
-                <img id="imgPre" src="" style="display:none; width:100%; border-radius:10px; margin-top:10px;">
-                <p id="uploadLabel">คลิกเพื่อเลือกรูปภาพสินค้า</p>
-            </div>
             
+            <div class="image-upload-container" onclick="document.getElementById('pImage').click()">
+                <input type="file" id="pImage" accept="image/*" onchange="previewImg(event)" hidden>
+                <div id="uploadPlaceholder">
+                    <span style="font-size: 30px;">📸</span>
+                    <p>คลิกเพื่อเลือกรูปภาพสินค้า</p>
+                </div>
+                <img id="imgPre" src="" style="display:none; width:100%; border-radius:12px;">
+            </div>
+
             <input type="text" id="pTitle" placeholder="ชื่อสินค้า">
             <select id="pCat">
                 <option value="ทั่วไป">เลือกคณะ/หมวดหมู่</option>
@@ -87,12 +91,12 @@
 
     <div id="chatBox" class="chat-float" style="display: none;">
         <div class="chat-header">
-            <span id="chatTitle">ห้องแชท</span>
+            <span id="chatTitle">แชทสอบถาม</span>
             <button onclick="closeChat()">×</button>
         </div>
         <div id="chatMsgs" class="chat-body"></div>
-        <div class="chat-input">
-            <input type="text" id="msgInput" placeholder="ถามผู้ขาย...">
+        <div class="chat-input-group">
+            <input type="text" id="msgInput" placeholder="พิมพ์ข้อความ...">
             <button onclick="sendMsg()">ส่ง</button>
         </div>
     </div>
