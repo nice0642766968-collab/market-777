@@ -1,263 +1,49 @@
-/* style.css */
 :root {
-    --primary-color: #1a237e;    /* น้ำเงินเข้มทางการ */
-    --secondary-color: #fbc02d;  /* สีเหลืองทองจันทรเกษม */
-    --accent-color: #3949ab;     /* น้ำเงินสว่างสำหรับ Hover */
-    --bg-body: #f4f7f9;          /* พื้นหลังเทาอ่อนสะอาด */
-    --text-main: #2c3e50;
-    --text-light: #7f8c8d;
+    --primary: #1a2a6c;
+    --accent: #f1c40f;
+    --bg: #f4f7f6;
     --white: #ffffff;
-    --shadow: 0 8px 30px rgba(0,0,0,0.08);
-    --border-radius: 12px;
 }
 
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
+body { font-family: 'Kanit', sans-serif; background: var(--bg); margin: 0; }
+
+/* Auth Styling - จัดวางกลางจอ */
+.auth-overlay {
+    height: 100vh; display: flex; align-items: center; justify-content: center;
+    background: linear-gradient(135deg, var(--primary), #2a4858);
 }
-
-body {
-    font-family: 'Kanit', sans-serif;
-    background-color: var(--bg-body);
-    color: var(--text-main);
-    line-height: 1.6;
+.auth-card {
+    background: rgba(255, 255, 255, 0.95); padding: 40px; border-radius: 20px;
+    width: 350px; text-align: center; box-shadow: 0 15px 35px rgba(0,0,0,0.2);
 }
+.auth-header h2 span { color: var(--primary); }
 
-/* Navbar */
-.navbar {
-    background: var(--primary-color);
-    padding: 1rem 2rem;
-    position: sticky;
-    top: 0;
-    z-index: 1000;
-    box-shadow: 0 2px 10px rgba(0,0,0,0.2);
-}
+/* App UI */
+.navbar { background: var(--primary); color: white; padding: 15px 5%; position: sticky; top: 0; z-index: 100; }
+.nav-content { max-width: 1200px; margin: auto; display: flex; justify-content: space-between; align-items: center; }
+.logo span { color: var(--accent); font-weight: bold; }
 
-.nav-container {
-    max-width: 1200px;
-    margin: auto;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-}
+.main-layout { max-width: 1200px; margin: 30px auto; display: flex; gap: 20px; padding: 0 20px; }
+.sidebar { width: 250px; background: white; padding: 20px; border-radius: 15px; height: fit-content; box-shadow: 0 4px 12px rgba(0,0,0,0.05); }
+.sidebar ul { list-style: none; padding: 0; }
+.sidebar li { padding: 12px; cursor: pointer; border-radius: 8px; transition: 0.3s; margin-bottom: 5px; }
+.sidebar li:hover, .sidebar li.active { background: var(--primary); color: white; }
 
-.logo {
-    color: var(--white);
-    font-size: 1.5rem;
-    font-weight: 600;
-}
+/* Product Grid */
+.grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 20px; flex: 1; }
+.card { background: white; border-radius: 15px; padding: 20px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); border-top: 5px solid var(--accent); transition: 0.3s; }
+.card:hover { transform: translateY(-5px); }
+.price-tag { font-size: 1.5rem; font-weight: bold; color: var(--primary); margin: 10px 0; }
 
-.logo span {
-    color: var(--secondary-color);
-}
+/* Common Buttons */
+.btn-primary { background: var(--primary); color: white; border: none; padding: 12px; border-radius: 10px; width: 100%; cursor: pointer; font-size: 1rem; }
+.btn-post { background: var(--accent); border: none; padding: 10px 20px; border-radius: 8px; font-weight: bold; cursor: pointer; }
+input, select, textarea { width: 100%; padding: 12px; margin: 10px 0; border: 1px solid #ddd; border-radius: 10px; box-sizing: border-box; font-family: 'Kanit'; }
 
-.btn-post-nav {
-    background: var(--secondary-color);
-    color: var(--primary-color);
-    border: none;
-    padding: 10px 24px;
-    border-radius: 30px;
-    font-weight: 600;
-    cursor: pointer;
-    transition: all 0.3s ease;
-}
+/* Modal & Chat */
+.modal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); display: none; align-items: center; justify-content: center; z-index: 1000; }
+.modal-content { background: white; padding: 30px; border-radius: 20px; width: 450px; }
 
-.btn-post-nav:hover {
-    background: var(--white);
-    transform: translateY(-2px);
-}
-
-/* Category Bar */
-.container {
-    max-width: 1200px;
-    margin: 20px auto;
-    padding: 0 20px;
-}
-
-.category-bar {
-    display: flex;
-    gap: 12px;
-    padding: 10px 0;
-    overflow-x: auto;
-    margin-bottom: 30px;
-    scrollbar-width: none; /* Hide scrollbar Firefox */
-}
-
-.category-bar::-webkit-scrollbar { display: none; } /* Hide scrollbar Chrome */
-
-.cat-btn {
-    background: var(--white);
-    border: 1px solid #e0e0e0;
-    padding: 8px 20px;
-    border-radius: 20px;
-    cursor: pointer;
-    white-space: nowrap;
-    color: var(--text-main);
-    transition: 0.3s;
-}
-
-.cat-btn.active, .cat-btn:hover {
-    background: var(--primary-color);
-    color: var(--white);
-    border-color: var(--primary-color);
-}
-
-/* Market Grid */
-.market-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-    gap: 25px;
-}
-
-/* Product Card */
-.product-card {
-    background: var(--white);
-    border-radius: var(--border-radius);
-    overflow: hidden;
-    box-shadow: var(--shadow);
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
-    border: 1px solid rgba(0,0,0,0.05);
-}
-
-.product-card:hover {
-    transform: translateY(-10px);
-    box-shadow: 0 15px 45px rgba(0,0,0,0.12);
-}
-
-.product-info {
-    padding: 20px;
-}
-
-.category-badge {
-    background: #e8eaf6;
-    color: var(--primary-color);
-    font-size: 0.75rem;
-    padding: 4px 12px;
-    border-radius: 4px;
-    text-transform: uppercase;
-    font-weight: 600;
-}
-
-.product-info h3 {
-    margin: 12px 0 8px;
-    font-size: 1.2rem;
-}
-
-.price-tag {
-    color: var(--primary-color);
-    font-size: 1.5rem;
-    font-weight: 700;
-    margin-bottom: 15px;
-}
-
-.btn-contact {
-    width: 100%;
-    background: var(--white);
-    border: 2px solid var(--primary-color);
-    color: var(--primary-color);
-    padding: 10px;
-    border-radius: 8px;
-    font-weight: 600;
-    cursor: pointer;
-    transition: 0.3s;
-}
-
-.btn-contact:hover {
-    background: var(--primary-color);
-    color: var(--white);
-}
-
-/* Modal Styling */
-.modal {
-    display: none;
-    position: fixed;
-    top: 0; left: 0; width: 100%; height: 100%;
-    background: rgba(0,0,0,0.5);
-    backdrop-filter: blur(5px);
-    justify-content: center;
-    align-items: center;
-    z-index: 2000;
-}
-
-.modal-content {
-    background: var(--white);
-    padding: 40px;
-    border-radius: 20px;
-    width: 90%;
-    max-width: 500px;
-    box-shadow: 0 20px 60px rgba(0,0,0,0.3);
-}
-
-.modal-content h3 { margin-bottom: 20px; color: var(--primary-color); }
-
-input, select, textarea {
-    width: 100%;
-    padding: 12px 15px;
-    margin-bottom: 15px;
-    border: 1px solid #ddd;
-    border-radius: 8px;
-    font-family: inherit;
-    font-size: 1rem;
-}
-
-.btn-confirm {
-    background: var(--primary-color);
-    color: var(--white);
-    border: none;
-    padding: 12px 25px;
-    border-radius: 8px;
-    cursor: pointer;
-    font-weight: 600;
-}
-
-/* Chat Floating Window */
-.chat-container {
-    position: fixed;
-    bottom: 30px;
-    right: 30px;
-    width: 350px;
-    height: 500px;
-    background: var(--white);
-    border-radius: 20px;
-    box-shadow: 0 10px 50px rgba(0,0,0,0.2);
-    display: flex;
-    flex-direction: column;
-    overflow: hidden;
-    border: 1px solid rgba(0,0,0,0.1);
-}
-
-.chat-header {
-    background: var(--primary-color);
-    color: var(--white);
-    padding: 20px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-}
-
-.msg-display {
-    flex: 1;
-    padding: 20px;
-    background: #fcfcfc;
-    overflow-y: auto;
-}
-
-.chat-input-area {
-    padding: 15px;
-    background: var(--white);
-    display: flex;
-    gap: 10px;
-    border-top: 1px solid #eee;
-}
-
-.chat-input-area input { margin-bottom: 0; border-radius: 25px; }
-
-#btnSend {
-    background: var(--primary-color);
-    color: var(--white);
-    border: none;
-    padding: 0 20px;
-    border-radius: 25px;
-    cursor: pointer;
-}
+.chat-float { position: fixed; bottom: 20px; right: 20px; width: 300px; height: 400px; background: white; border-radius: 15px; box-shadow: 0 5px 25px rgba(0,0,0,0.2); display: flex; flex-direction: column; }
+.chat-header { background: var(--primary); color: white; padding: 12px; display: flex; justify-content: space-between; border-radius: 15px 15px 0 0; }
+.chat-body { flex: 1; padding: 15px; overflow-y: auto; background: #fafafa; }
