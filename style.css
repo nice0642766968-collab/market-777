@@ -1,287 +1,51 @@
 :root {
-    /* Color Palette - ทางการและทันสมัย */
-    --primary-dark: #0f172a;    /* สีกรมท่าเข้ม */
-    --primary-light: #1e293b;   /* สีกรมท่าอ่อน */
-    --accent-gold: #d4af37;     /* สีทอง */
-    --accent-gold-hover: #b8962e;
-    --text-main: #1e293b;
-    --text-muted: #64748b;
-    --bg-body: #f8fafc;         /* พื้นหลังเทาน้ำเงินอ่อน */
+    --primary: #1a2a6c;
+    --accent: #f1c40f;
+    --bg: #f8f9fa;
     --white: #ffffff;
-    --error: #ef4444;
-    --success: #10b981;
-    --shadow-sm: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
-    --shadow-md: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
-    --radius: 16px;
+    --shadow: 0 8px 30px rgba(0,0,0,0.08);
 }
 
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-    font-family: 'Kanit', sans-serif;
-}
+* { box-sizing: border-box; font-family: 'Kanit', sans-serif; }
+body { margin: 0; background: var(--bg); color: #333; }
 
-body {
-    background-color: var(--bg-body);
-    color: var(--text-main);
-    line-height: 1.6;
-}
-
-/* --- Authentication View (จัดวางกลางจอ) --- */
+/* Auth Layout - กลางจอ */
 .auth-overlay {
-    min-height: 100vh;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background: radial-gradient(circle at top right, var(--primary-light), var(--primary-dark));
-    padding: 20px;
+    height: 100vh; display: flex; align-items: center; justify-content: center;
+    background: linear-gradient(135deg, #1a2a6c, #2a4858);
 }
-
 .auth-card {
-    background: rgba(255, 255, 255, 0.95);
-    backdrop-filter: blur(10px);
-    width: 100%;
-    max-width: 420px;
-    padding: 48px 40px;
-    border-radius: 24px;
-    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
-    text-align: center;
-    border: 1px solid rgba(255, 255, 255, 0.2);
+    background: var(--white); padding: 40px; border-radius: 25px;
+    width: 380px; box-shadow: 0 20px 50px rgba(0,0,0,0.2); text-align: center;
 }
+.logo-box { font-size: 40px; margin-bottom: 10px; }
 
-.auth-header h2 {
-    font-size: 2rem;
-    color: var(--primary-dark);
-    margin-bottom: 8px;
-    font-weight: 600;
-}
+/* Marketplace UI */
+.navbar { background: var(--primary); color: white; padding: 15px 5%; position: sticky; top: 0; z-index: 100; box-shadow: var(--shadow); }
+.nav-content { max-width: 1200px; margin: auto; display: flex; justify-content: space-between; align-items: center; }
+.logo span { color: var(--accent); font-weight: bold; }
 
-.auth-header h2 span {
-    color: var(--accent-gold);
-}
+.main-layout { max-width: 1200px; margin: 30px auto; display: flex; gap: 25px; padding: 0 20px; }
+.sidebar { width: 260px; background: white; padding: 25px; border-radius: 20px; height: fit-content; box-shadow: var(--shadow); }
+.sidebar li { padding: 12px; cursor: pointer; border-radius: 10px; transition: 0.3s; margin-bottom: 5px; list-style: none; }
+.sidebar li:hover, .sidebar li.active { background: var(--primary); color: white; transform: translateX(5px); }
 
-.auth-header p {
-    color: var(--text-muted);
-    font-size: 0.95rem;
-    margin-bottom: 32px;
-}
+/* Card & Grid */
+.grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 25px; flex: 1; }
+.card { background: white; border-radius: 20px; padding: 15px; box-shadow: var(--shadow); transition: 0.3s; border-top: 5px solid var(--accent); }
+.card:hover { transform: translateY(-10px); }
+.card-img { width: 100%; height: 200px; object-fit: cover; border-radius: 15px; margin-bottom: 15px; background: #eee; }
+.price-tag { font-size: 1.5rem; font-weight: bold; color: var(--primary); margin: 10px 0; }
 
-/* --- Navigation Bar --- */
-.navbar {
-    background: var(--primary-dark);
-    color: var(--white);
-    padding: 0 5%;
-    height: 80px;
-    display: flex;
-    align-items: center;
-    position: sticky;
-    top: 0;
-    z-index: 1000;
-    box-shadow: var(--shadow-md);
-}
+/* Form Elements */
+input, select, textarea { width: 100%; padding: 12px; margin: 10px 0; border: 1px solid #ddd; border-radius: 12px; font-size: 1rem; }
+.btn-primary { background: var(--primary); color: white; border: none; padding: 14px; border-radius: 12px; cursor: pointer; width: 100%; font-weight: bold; }
+.btn-post { background: var(--accent); border: none; padding: 10px 25px; border-radius: 10px; font-weight: bold; cursor: pointer; }
 
-.nav-content {
-    width: 100%;
-    max-width: 1280px;
-    margin: 0 auto;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-}
+/* Upload Area */
+.upload-area { border: 2px dashed #ccc; padding: 20px; border-radius: 15px; text-align: center; cursor: pointer; margin-bottom: 10px; }
 
-.logo {
-    font-size: 1.5rem;
-    font-weight: 600;
-    letter-spacing: 0.5px;
-}
-
-.logo span {
-    color: var(--accent-gold);
-}
-
-/* --- Layout System --- */
-.main-layout {
-    max-width: 1280px;
-    margin: 40px auto;
-    display: grid;
-    grid-template-columns: 280px 1fr;
-    gap: 32px;
-    padding: 0 20px;
-}
-
-/* --- Sidebar (Category Menu) --- */
-.sidebar {
-    background: var(--white);
-    padding: 24px;
-    border-radius: var(--radius);
-    height: fit-content;
-    box-shadow: var(--shadow-sm);
-    border: 1px solid #e2e8f0;
-}
-
-.sidebar h3 {
-    font-size: 1.1rem;
-    margin-bottom: 20px;
-    padding-bottom: 12px;
-    border-bottom: 2px solid var(--bg-body);
-}
-
-.sidebar li {
-    list-style: none;
-    padding: 12px 16px;
-    margin-bottom: 8px;
-    border-radius: 12px;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    color: var(--text-muted);
-    display: flex;
-    align-items: center;
-}
-
-.sidebar li:hover {
-    background: var(--bg-body);
-    color: var(--primary-dark);
-    padding-left: 20px;
-}
-
-.sidebar li.active {
-    background: var(--primary-dark);
-    color: var(--accent-gold);
-    font-weight: 500;
-}
-
-/* --- Product Cards Grid --- */
-.grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-    gap: 24px;
-}
-
-.card {
-    background: var(--white);
-    border-radius: var(--radius);
-    padding: 16px;
-    box-shadow: var(--shadow-sm);
-    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-    border: 1px solid #f1f5f9;
-}
-
-.card:hover {
-    transform: translateY(-8px);
-    box-shadow: var(--shadow-md);
-}
-
-.card-img {
-    width: 100%;
-    height: 220px;
-    object-fit: cover;
-    border-radius: 12px;
-    margin-bottom: 16px;
-}
-
-.price-tag {
-    font-size: 1.5rem;
-    font-weight: 700;
-    color: var(--primary-dark);
-    margin: 8px 0;
-}
-
-/* --- Form Controls --- */
-input, select, textarea {
-    width: 100%;
-    padding: 14px 16px;
-    margin-bottom: 16px;
-    border: 1.5px solid #e2e8f0;
-    border-radius: 12px;
-    background: #f8fafc;
-    font-size: 1rem;
-    transition: all 0.3s ease;
-}
-
-input:focus, select:focus, textarea:focus {
-    outline: none;
-    border-color: var(--accent-gold);
-    background: var(--white);
-    box-shadow: 0 0 0 4px rgba(212, 175, 55, 0.1);
-}
-
-/* --- Buttons --- */
-.btn-primary {
-    background: var(--primary-dark);
-    color: var(--white);
-    border: none;
-    padding: 14px 24px;
-    border-radius: 12px;
-    font-weight: 600;
-    cursor: pointer;
-    transition: 0.3s;
-    width: 100%;
-}
-
-.btn-primary:hover {
-    background: var(--primary-light);
-    transform: translateY(-2px);
-}
-
-.btn-post {
-    background: var(--accent-gold);
-    color: var(--primary-dark);
-    border: none;
-    padding: 12px 24px;
-    border-radius: 12px;
-    font-weight: 600;
-    cursor: pointer;
-    box-shadow: 0 4px 14px rgba(212, 175, 55, 0.3);
-}
-
-.btn-post:hover {
-    background: var(--accent-gold-hover);
-    transform: scale(1.02);
-}
-
-/* --- Modal Styling --- */
-.modal-content {
-    background: var(--white);
-    padding: 40px;
-    border-radius: 24px;
-    width: 90%;
-    max-width: 500px;
-    position: relative;
-    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
-}
-
-/* --- Floating Chat --- */
-.chat-float {
-    position: fixed;
-    bottom: 30px;
-    right: 30px;
-    width: 350px;
-    height: 500px;
-    background: var(--white);
-    border-radius: 20px;
-    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
-    display: flex;
-    flex-direction: column;
-    overflow: hidden;
-    border: 1px solid #e2e8f0;
-}
-
-.chat-header {
-    background: var(--primary-dark);
-    color: var(--accent-gold);
-    padding: 18px;
-    font-weight: 600;
-    display: flex;
-    justify-content: space-between;
-}
-
-/* --- Responsive --- */
-@media (max-width: 992px) {
-    .main-layout {
-        grid-template-columns: 1fr;
-    }
-    .sidebar {
-        display: none; /* หรือทำเป็น Horizontal Menu */
-    }
-}
+/* Chat Floating */
+.chat-float { position: fixed; bottom: 20px; right: 20px; width: 320px; height: 450px; background: white; border-radius: 20px; box-shadow: 0 10px 40px rgba(0,0,0,0.15); display: flex; flex-direction: column; overflow: hidden; }
+.chat-header { background: var(--primary); color: white; padding: 15px; display: flex; justify-content: space-between; }
+.chat-body { flex: 1; padding: 15px; overflow-y: auto; background: #f9f9f9; display: flex; flex-direction: column; gap: 8px; }
